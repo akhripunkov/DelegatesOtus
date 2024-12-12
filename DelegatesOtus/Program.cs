@@ -2,6 +2,7 @@
 
 using DelegatesOtus.Extensions;
 using DelegatesOtus.FileSearch;
+using Microsoft.Extensions.Configuration;
 
 Console.WriteLine($"GetMax function testing.");
 var items = new List<string> { "apple","smart-contract", "banana", "cherry", "date", "eggplant" };
@@ -19,6 +20,15 @@ Console.WriteLine(combined);
 Console.WriteLine($"Max item by last symbol: {maxItem}");
 Console.WriteLine($"________________________");
 
+var builder = new ConfigurationBuilder()
+    .AddJsonFile($"appsettings.json", true, true);
+var config = builder.Build();
+string? searchDirectory = config["SearchDirectory"];
+string? cancelFile = config["CancelFile"];
+
 var searcher = new FileSearcher();
-var handler = new FileEventHandler(searcher);
-searcher.SearchFiles(@"D:\Otus\homework\delegates\TestFiles");
+var handler = new FileEventHandler(searcher, cancelFile);
+if (searchDirectory != null)
+{
+    searcher.SearchFiles(searchDirectory);
+}

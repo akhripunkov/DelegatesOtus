@@ -3,10 +3,12 @@
 public class FileEventHandler
 {
     private readonly FileSearcher _fileSearcher;
+    private readonly string _cancelledFileName;
 
-    public FileEventHandler(FileSearcher fileSearcher)
+    public FileEventHandler(FileSearcher fileSearcher, string? cancelledFileName = null)
     {
         _fileSearcher = fileSearcher;
+        _cancelledFileName = cancelledFileName;
         _fileSearcher.FileFound += OnFileFound;
         _fileSearcher.SearchCompleted += OnSearchCompleted;
     }
@@ -15,7 +17,7 @@ public class FileEventHandler
     {
         Console.WriteLine($"FileFound: {e.FilePath}");
 
-        if (e.FilePath.EndsWith("cancelled.txt"))
+        if (e.FilePath.EndsWith(_cancelledFileName))
         {
             Console.WriteLine("Cancelled");
             _fileSearcher.Cancel();
