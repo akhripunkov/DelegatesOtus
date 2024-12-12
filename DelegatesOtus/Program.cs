@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using DelegatesOtus.Extensions;
+using DelegatesOtus.FileSearch;
 
 Console.WriteLine($"GetMax function testing.");
 var items = new List<string> { "apple","smart-contract", "banana", "cherry", "date", "eggplant" };
@@ -16,3 +17,8 @@ Console.WriteLine("List of words: ");
 combined = string.Join(", ", items);
 Console.WriteLine(combined);
 Console.WriteLine($"Max item by last symbol: {maxItem}");
+Console.WriteLine($"________________________");
+
+var searcher = new FileSearcher();
+var handler = new FileEventHandler(searcher);
+searcher.SearchFiles(@"D:\Otus\homework\delegates\TestFiles");
