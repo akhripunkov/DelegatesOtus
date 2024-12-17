@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using DelegatesOtus;
 using DelegatesOtus.Extensions;
 using DelegatesOtus.FileSearch;
 using Microsoft.Extensions.Configuration;
@@ -26,8 +27,9 @@ var config = builder.Build();
 string? searchDirectory = config["SearchDirectory"];
 string? cancelFile = config["CancelFile"];
 
-var searcher = new FileSearcher();
-var handler = new FileEventHandler(searcher, cancelFile);
+var logger = new ConsoleLogger();
+var searcher = new FileSearcher(logger);
+var handler = new FileEventHandler(searcher,logger, cancelFile);
 if (searchDirectory != null)
 {
     searcher.SearchFiles(searchDirectory);

@@ -1,4 +1,6 @@
-﻿namespace DelegatesOtus.FileSearch;
+﻿using DelegatesOtus.Abstractions;
+
+namespace DelegatesOtus.FileSearch;
 
 public class FileSearcher
 {
@@ -6,6 +8,12 @@ public class FileSearcher
     public event EventHandler SearchCompleted;
     
     private bool _cancelled;
+    private ILogger _logger;
+
+    public FileSearcher(ILogger logger)
+    {
+        _logger = logger;
+    }
 
     public void SearchFiles(string directory)
     {

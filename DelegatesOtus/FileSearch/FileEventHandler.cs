@@ -1,32 +1,43 @@
-﻿namespace DelegatesOtus.FileSearch;
+﻿using DelegatesOtus.Abstractions;
+
+namespace DelegatesOtus.FileSearch;
 
 public class FileEventHandler
 {
     private readonly FileSearcher _fileSearcher;
-    private readonly string _cancelledFileName;
+    private readonly string? _cancelledFileName;
+    private readonly ILogger _logger;
 
-    public FileEventHandler(FileSearcher fileSearcher, string? cancelledFileName = null)
+    public FileEventHandler(FileSearcher fileSearcher,ILogger logger, string? cancelledFileName = null)
     {
         _fileSearcher = fileSearcher;
         _cancelledFileName = cancelledFileName;
+        _logger = logger;
         _fileSearcher.FileFound += OnFileFound;
         _fileSearcher.SearchCompleted += OnSearchCompleted;
     }
 
     private void OnFileFound(object? sender, FileArgs e)
     {
-        Console.WriteLine($"FileFound: {e.FilePath}");
+        _logger.Log($"FileFound: {e.FilePath}");
 
         if (e.FilePath.EndsWith(_cancelledFileName))
         {
-            Console.WriteLine("Cancelled");
+            _logger.Log("Cancelled");
             _fileSearcher.Cancel();
+            Detach();
         }
     }
 
     private void OnSearchCompleted(object? sender, EventArgs e)
     {
-        Console.WriteLine("Search completed");
+        _logger.Log("Search completed");
+        Detach();
     }
     
+    private void Detach()
+    {
+        _fileSearcher.FileFound -= OnFileFound;
+        _fileSearcher.SearchCompleted -= OnSearchCompleted;
+    }
 }
